@@ -1,0 +1,8 @@
+{
+  "name": "Aegis Tutoring ERP & Academic Operating System",
+  "description": "Enterprise tutoring center operating system for lead CRM, admissions, timetable scheduling, credit-based billing, session check-ins, payroll locking, and waterfall cohort accounting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
