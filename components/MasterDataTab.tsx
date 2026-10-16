@@ -24,59 +24,59 @@ export const MasterDataTab: React.FC<MasterDataTabProps> = ({ masterData, curren
   const [activeSubTab, setActiveSubTab] = useState<'rates' | 'packages' | 'holidays' | 'config' | 'users'>('rates');
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6 pb-12 text-slate-900">
       {/* Header & Sub-Navigation */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-slate-200 p-4 rounded-2xl shadow-xs">
         <div>
-          <h2 className="text-base font-bold text-white flex items-center space-x-2">
+          <h2 className="text-base font-bold text-slate-900 flex items-center space-x-2">
             <span>Master Data & Configuration Matrix</span>
-            <span className="px-2 py-0.5 text-xs bg-slate-800 text-slate-400 rounded-full font-mono">
+            <span className="px-2 py-0.5 text-xs bg-slate-100 text-slate-700 rounded-full font-mono font-bold">
               PRD v0.4
             </span>
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Effective-dated rates, package pricing, public holiday exclusions, and business engine parameters.
           </p>
         </div>
 
         {/* Sub tabs */}
-        <div className="flex items-center space-x-1 bg-slate-800/80 p-1 rounded-xl border border-slate-700">
+        <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
           <button
             onClick={() => setActiveSubTab('rates')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-              activeSubTab === 'rates' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+              activeSubTab === 'rates' ? 'bg-[#6dd95d] text-slate-950 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
             Teacher Rates
           </button>
           <button
             onClick={() => setActiveSubTab('packages')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-              activeSubTab === 'packages' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+              activeSubTab === 'packages' ? 'bg-[#6dd95d] text-slate-950 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
             Package Pricing
           </button>
           <button
             onClick={() => setActiveSubTab('holidays')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-              activeSubTab === 'holidays' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+              activeSubTab === 'holidays' ? 'bg-[#6dd95d] text-slate-950 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
             Holidays
           </button>
           <button
             onClick={() => setActiveSubTab('config')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-              activeSubTab === 'config' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+              activeSubTab === 'config' ? 'bg-[#6dd95d] text-slate-950 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
             Engine Config
           </button>
           <button
             onClick={() => setActiveSubTab('users')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-              activeSubTab === 'users' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+              activeSubTab === 'users' ? 'bg-[#6dd95d] text-slate-950 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
             Users &amp; Roles
@@ -86,17 +86,17 @@ export const MasterDataTab: React.FC<MasterDataTabProps> = ({ masterData, curren
 
       {/* SUBTAB: Teacher Rates Matrix */}
       {activeSubTab === 'rates' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-            <h3 className="font-bold text-sm text-white">Effective-Dated Teacher Rates Matrix</h3>
-            <span className="text-xs text-slate-400">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+          <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+            <h3 className="font-bold text-sm text-slate-900">Effective-Dated Teacher Rates Matrix</h3>
+            <span className="text-xs text-slate-500">
               Classes require an active rate tuple matching teacher, subject, curriculum, level, and class type
             </span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-800/80 text-slate-400 uppercase font-semibold text-[10px] tracking-wider border-b border-slate-700">
+            <table className="w-full text-left text-xs text-slate-700">
+              <thead className="bg-slate-50 text-slate-700 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
                 <tr>
                   <th className="py-3 px-4">Teacher</th>
                   <th className="py-3 px-4">Subject</th>
@@ -107,28 +107,28 @@ export const MasterDataTab: React.FC<MasterDataTabProps> = ({ masterData, curren
                   <th className="py-3 px-4">Effective Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-slate-100">
                 {masterData.teacherRates.map((tr: any) => (
-                  <tr key={tr.id} className="hover:bg-slate-800/40 transition">
-                    <td className="py-3 px-4 font-semibold text-white">{tr.teacher_name}</td>
-                    <td className="py-3 px-4 text-slate-300">
+                  <tr key={tr.id} className="hover:bg-slate-50/70 transition">
+                    <td className="py-3 px-4 font-semibold text-slate-900">{tr.teacher_name}</td>
+                    <td className="py-3 px-4 text-slate-700">
                       {masterData.subjects.find((s: any) => s.id === tr.subject_id)?.name}
                     </td>
-                    <td className="py-3 px-4 text-slate-300">
+                    <td className="py-3 px-4 text-slate-700">
                       {masterData.curricula.find((c: any) => c.id === tr.curriculum_id)?.name}
                     </td>
-                    <td className="py-3 px-4 text-slate-300">
+                    <td className="py-3 px-4 text-slate-700">
                       {masterData.levels.find((l: any) => l.id === tr.level_id)?.name}
                     </td>
                     <td className="py-3 px-4">
-                      <span className="capitalize px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 border border-slate-700 text-slate-300">
+                      <span className="capitalize px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 border border-slate-200 text-slate-800">
                         {tr.class_type}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-right font-mono font-bold text-emerald-400 text-sm">
+                    <td className="py-3 px-4 text-right font-mono font-extrabold text-slate-900 text-sm">
                       {formatRupiah(tr.rate)}
                     </td>
-                    <td className="py-3 px-4 text-slate-400 font-mono">
+                    <td className="py-3 px-4 text-slate-500 font-mono">
                       {formatDateOnly(tr.effective_from)}
                     </td>
                   </tr>
@@ -141,17 +141,17 @@ export const MasterDataTab: React.FC<MasterDataTabProps> = ({ masterData, curren
 
       {/* SUBTAB: Package Pricing Matrix */}
       {activeSubTab === 'packages' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-            <h3 className="font-bold text-sm text-white">Student Package Pricing Matrix</h3>
-            <span className="text-xs text-slate-400">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+          <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+            <h3 className="font-bold text-sm text-slate-900">Student Package Pricing Matrix</h3>
+            <span className="text-xs text-slate-500">
               List price snapshotted automatically upon invoice creation
             </span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-800/80 text-slate-400 uppercase font-semibold text-[10px] tracking-wider border-b border-slate-700">
+            <table className="w-full text-left text-xs text-slate-700">
+              <thead className="bg-slate-50 text-slate-700 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
                 <tr>
                   <th className="py-3 px-4">Package</th>
                   <th className="py-3 px-4">Subject</th>
@@ -162,28 +162,28 @@ export const MasterDataTab: React.FC<MasterDataTabProps> = ({ masterData, curren
                   <th className="py-3 px-4">Effective Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-slate-100">
                 {masterData.packagePrices.map((pp: any) => (
-                  <tr key={pp.id} className="hover:bg-slate-800/40 transition">
-                    <td className="py-3 px-4 font-semibold text-white">{pp.package_name}</td>
-                    <td className="py-3 px-4 text-slate-300">
+                  <tr key={pp.id} className="hover:bg-slate-50/70 transition">
+                    <td className="py-3 px-4 font-semibold text-slate-900">{pp.package_name}</td>
+                    <td className="py-3 px-4 text-slate-700">
                       {masterData.subjects.find((s: any) => s.id === pp.subject_id)?.name}
                     </td>
-                    <td className="py-3 px-4 text-slate-300">
+                    <td className="py-3 px-4 text-slate-700">
                       {masterData.curricula.find((c: any) => c.id === pp.curriculum_id)?.name}
                     </td>
-                    <td className="py-3 px-4 text-slate-300">
+                    <td className="py-3 px-4 text-slate-700">
                       {masterData.levels.find((l: any) => l.id === pp.level_id)?.name}
                     </td>
                     <td className="py-3 px-4">
-                      <span className="capitalize px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 border border-slate-700 text-slate-300">
+                      <span className="capitalize px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 border border-slate-200 text-slate-800">
                         {pp.class_type}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-right font-mono font-bold text-cyan-400 text-sm">
+                    <td className="py-3 px-4 text-right font-mono font-extrabold text-blue-900 text-sm">
                       {formatRupiah(pp.price)}
                     </td>
-                    <td className="py-3 px-4 text-slate-400 font-mono">
+                    <td className="py-3 px-4 text-slate-500 font-mono">
                       {formatDateOnly(pp.effective_from)}
                     </td>
                   </tr>
@@ -196,10 +196,10 @@ export const MasterDataTab: React.FC<MasterDataTabProps> = ({ masterData, curren
 
       {/* SUBTAB: Public Holidays */}
       {activeSubTab === 'holidays' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-            <h3 className="font-bold text-sm text-white">Center Holiday Exclusions</h3>
-            <span className="text-xs text-slate-400">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+          <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+            <h3 className="font-bold text-sm text-slate-900">Center Holiday Exclusions</h3>
+            <span className="text-xs text-slate-500">
               Automatic slot generation skips these calendar dates during allocation
             </span>
           </div>
@@ -208,18 +208,18 @@ export const MasterDataTab: React.FC<MasterDataTabProps> = ({ masterData, curren
             {masterData.holidays.map((h: any, idx: number) => (
               <div
                 key={idx}
-                className="p-3 bg-slate-800/60 rounded-xl border border-slate-700/60 flex items-center justify-between"
+                className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="h-8 w-8 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/20">
+                  <div className="h-8 w-8 rounded-lg bg-[#f77f73]/20 text-rose-950 flex items-center justify-center border border-[#f77f73]/40">
                     <Calendar className="h-4 w-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-white">{h.note}</div>
-                    <div className="font-mono text-[11px] text-slate-400">{formatDateOnly(h.day)}</div>
+                    <div className="text-xs font-bold text-slate-900">{h.note}</div>
+                    <div className="font-mono text-[11px] text-slate-500">{formatDateOnly(h.day)}</div>
                   </div>
                 </div>
-                <span className="px-2 py-0.5 text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-full">
+                <span className="px-2 py-0.5 text-[10px] font-bold bg-[#f77f73]/20 text-rose-950 border border-[#f77f73]/40 rounded-full">
                   Exclusion Active
                 </span>
               </div>
@@ -233,18 +233,18 @@ export const MasterDataTab: React.FC<MasterDataTabProps> = ({ masterData, curren
 
       {/* SUBTAB: Engine Config Parameters */}
       {activeSubTab === 'config' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-            <h3 className="font-bold text-sm text-white">Operating System Configuration Parameters</h3>
-            <span className="text-xs text-slate-400 font-mono">table config</span>
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+          <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+            <h3 className="font-bold text-sm text-slate-900">Operating System Configuration Parameters</h3>
+            <span className="text-xs text-slate-500 font-mono">table config</span>
           </div>
 
-          <div className="divide-y divide-slate-800 text-xs">
+          <div className="divide-y divide-slate-100 text-xs">
             {Object.entries(masterData.config).map(([k, v]: [string, any]) => (
-              <div key={k} className="p-4 flex items-center justify-between hover:bg-slate-800/30 transition">
+              <div key={k} className="p-4 flex items-center justify-between hover:bg-slate-50/70 transition">
                 <div>
-                  <span className="font-mono font-bold text-indigo-400">{k}</span>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
+                  <span className="font-mono font-bold text-slate-900">{k}</span>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
                     {k === 'timezone' && 'Center operational timezone for business logic and session timestamps'}
                     {k === 'notice_hours' && 'Minimum hours of advance notice required to keep credit (≥ 4h)'}
                     {k === 'max_group_capacity' && 'Hard limit on group class cohort size'}
@@ -254,7 +254,7 @@ export const MasterDataTab: React.FC<MasterDataTabProps> = ({ masterData, curren
                     {k === 'inactivity_months' && 'Months of silence before active student is counted as dropped in waterfall'}
                   </p>
                 </div>
-                <span className="px-3 py-1 font-mono font-extrabold text-sm rounded-xl bg-slate-800 border border-slate-700 text-white">
+                <span className="px-3 py-1 font-mono font-extrabold text-sm rounded-xl bg-slate-100 border border-slate-200 text-slate-900">
                   {v}
                 </span>
               </div>

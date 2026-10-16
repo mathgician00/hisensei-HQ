@@ -70,45 +70,45 @@ export const UsersPanel: React.FC<UsersPanelProps> = ({ teachers, currentEmail }
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-slate-900">
       {error && (
-        <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs rounded-xl flex items-center space-x-2">
+        <div className="p-3 bg-[#f77f73]/15 border border-[#f77f73]/30 text-rose-900 text-xs rounded-xl flex items-center space-x-2 font-medium">
           <AlertTriangle className="h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      <form onSubmit={invite} className="bg-slate-900 border border-slate-800 rounded-2xl p-4 grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
-        <label className="text-[11px] text-slate-400 md:col-span-2">
+      <form onSubmit={invite} className="bg-white border border-slate-200 rounded-2xl p-4 grid grid-cols-1 md:grid-cols-5 gap-3 items-end shadow-xs">
+        <label className="text-[11px] font-semibold text-slate-700 md:col-span-2">
           Google account email
           <input
             required
             type="email"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="mt-1 w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none"
+            className="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-[#6dd95d]"
           />
         </label>
-        <label className="text-[11px] text-slate-400">
+        <label className="text-[11px] font-semibold text-slate-700">
           Role
           <select
             value={form.role}
             onChange={(e) => setForm({ ...form, role: e.target.value })}
-            className="mt-1 w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none"
+            className="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-[#6dd95d]"
           >
             {Object.entries(ROLE_LABELS).map(([k, v]) => (
               <option key={k} value={k}>{v}</option>
             ))}
           </select>
         </label>
-        <label className="text-[11px] text-slate-400">
+        <label className="text-[11px] font-semibold text-slate-700">
           Linked teacher
           <select
             disabled={form.role !== 'teacher'}
             required={form.role === 'teacher'}
             value={form.teacher_id}
             onChange={(e) => setForm({ ...form, teacher_id: e.target.value })}
-            className="mt-1 w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none disabled:opacity-40"
+            className="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-[#6dd95d] disabled:opacity-40"
           >
             <option value="">Select…</option>
             {teachers.map((t) => (
@@ -118,21 +118,21 @@ export const UsersPanel: React.FC<UsersPanelProps> = ({ teachers, currentEmail }
         </label>
         <button
           disabled={busy}
-          className="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white text-xs font-bold rounded-xl flex items-center justify-center space-x-2"
+          className="px-3 py-2 bg-[#6dd95d] hover:bg-[#5ec74e] disabled:bg-slate-100 text-slate-950 disabled:text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center space-x-2 shadow-xs transition"
         >
           <UserPlus className="h-4 w-4" />
           <span>Invite</span>
         </button>
       </form>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-        <div className="p-4 border-b border-slate-800 flex items-center space-x-2">
-          <Users className="h-4 w-4 text-indigo-400" />
-          <h3 className="font-bold text-sm text-white">Users and roles</h3>
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+        <div className="p-4 border-b border-slate-100 flex items-center space-x-2">
+          <Users className="h-4 w-4 text-emerald-700" />
+          <h3 className="font-bold text-sm text-slate-900">Users and roles</h3>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-slate-300">
-            <thead className="bg-slate-800/80 text-slate-400 uppercase font-semibold text-[10px] tracking-wider border-b border-slate-700">
+          <table className="w-full text-left text-xs text-slate-700">
+            <thead className="bg-slate-50 text-slate-700 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
               <tr>
                 <th className="py-3 px-4">Email</th>
                 <th className="py-3 px-4">Role</th>
@@ -141,31 +141,31 @@ export const UsersPanel: React.FC<UsersPanelProps> = ({ teachers, currentEmail }
                 <th className="py-3 px-4 text-right">Access</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-slate-100">
               {users.map((u) => {
                 const isMe = u.email.toLowerCase() === currentEmail.toLowerCase();
                 return (
-                  <tr key={u.id} className={u.active ? '' : 'opacity-50'}>
-                    <td className="py-3 px-4 font-mono text-white">{u.email}{isMe && <span className="ml-2 text-[10px] text-cyan-400">(you)</span>}</td>
+                  <tr key={u.id} className={`hover:bg-slate-50/70 transition ${u.active ? '' : 'opacity-50'}`}>
+                    <td className="py-3 px-4 font-mono font-medium text-slate-900">{u.email}{isMe && <span className="ml-2 text-[10px] text-blue-700 font-bold">(you)</span>}</td>
                     <td className="py-3 px-4">
                       <select
                         value={u.role}
                         disabled={busy || isMe}
                         onChange={(e) => post('update_user', { id: u.id, role: e.target.value, teacher_id: e.target.value === 'teacher' ? u.teacher_id ?? undefined : null })}
-                        className="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white focus:outline-none disabled:opacity-60"
+                        className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs text-slate-900 focus:outline-none focus:border-[#6dd95d] disabled:opacity-60"
                       >
                         {Object.entries(ROLE_LABELS).map(([k, v]) => (
                           <option key={k} value={k}>{v}</option>
                         ))}
                       </select>
                     </td>
-                    <td className="py-3 px-4 text-slate-400">{u.teacher_name ? `${u.teacher_name} (${u.teacher_code})` : '—'}</td>
-                    <td className="py-3 px-4 text-slate-400">{u.linked ? 'Yes' : 'Invited, not yet'}</td>
+                    <td className="py-3 px-4 text-slate-600">{u.teacher_name ? `${u.teacher_name} (${u.teacher_code})` : '—'}</td>
+                    <td className="py-3 px-4 text-slate-600">{u.linked ? 'Yes' : 'Invited, not yet'}</td>
                     <td className="py-3 px-4 text-right">
                       <button
                         disabled={busy || isMe}
                         onClick={() => post('update_user', { id: u.id, active: !u.active })}
-                        className="px-2 py-1 text-[11px] font-semibold rounded-lg border border-slate-700 hover:bg-slate-800 disabled:opacity-40"
+                        className="px-2 py-1 text-[11px] font-semibold rounded-lg border border-slate-200 hover:bg-slate-100 disabled:opacity-40 text-slate-700"
                       >
                         {u.active ? 'Deactivate' : 'Reactivate'}
                       </button>

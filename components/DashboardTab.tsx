@@ -9,15 +9,10 @@ import {
   Clock,
   ArrowRight,
   ShieldAlert,
-  Flame,
   CreditCard,
-  DollarSign,
   ChevronRight,
-  Calendar,
-  Sparkles,
 } from 'lucide-react';
 import { WaterfallChart } from '@/components/WaterfallChart';
-import { formatRupiah } from '@/lib/formatters';
 
 interface ExceptionItem {
   category: string;
@@ -66,44 +61,45 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
   onSelectStudentForInvoice,
 }) => {
   const exceptions = reports?.exceptions || [];
-  const renewals = reports?.renewals || [];
+  const renewals = [...(reports?.renewals || [])].sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+  );
   const waterfall = reports?.waterfall || [];
-  const funnelCohort = reports?.funnelCohort || [];
+  const funnelCohort = reports?.funnelCohort || reports?.cohort || [];
 
   const criticalExceptionsCount = exceptions.filter((e) => e.severity === 'critical').length;
-  const warningsCount = exceptions.filter((e) => e.severity === 'warning').length;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-slate-900">
       {/* 1. Header & Summary Bar */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
           <span>Executive BI & Academic Radar</span>
-          <span className="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium">
-            Live Database Analytics
+          <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-semibold border border-slate-200">
+            Live PostgreSQL Intelligence
           </span>
         </h1>
-        <p className="text-sm text-slate-400 mt-1">
+        <p className="text-xs text-slate-500 mt-1">
           Real-time institutional health monitoring: lead pipelines, student cohorts, active credit balances, exceptions, and revenue integrity.
         </p>
       </div>
 
-      {/* 2. Top Metric KPI Cards */}
+      {/* 2. Top Metric KPI Cards (Clean Flat Light Cards) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Active Pipeline Leads */}
         <div
           onClick={() => onNavigateTab('leads')}
-          className="bg-slate-900 border border-slate-800 hover:border-indigo-500/50 rounded-xl p-4 transition-all cursor-pointer group shadow-sm hover:shadow-indigo-500/5"
+          className="bg-white border border-slate-200 hover:border-slate-300 rounded-xl p-4 transition-all cursor-pointer group shadow-xs hover:shadow-sm"
         >
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
             <span>Leads in Pipeline</span>
-            <span className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500/20 transition-colors">
+            <span className="p-1.5 rounded-lg bg-[#65acff]/20 text-blue-900">
               <Users className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 flex items-baseline justify-between">
-            <span className="text-2xl font-bold text-slate-100">{leadsCount}</span>
-            <span className="text-xs text-indigo-400 flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-2xl font-bold text-slate-900">{leadsCount}</span>
+            <span className="text-xs text-blue-700 font-semibold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
               CRM <ChevronRight className="w-3 h-3" />
             </span>
           </div>
@@ -112,17 +108,17 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
         {/* Active Enrolled Students */}
         <div
           onClick={() => onNavigateTab('students')}
-          className="bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-xl p-4 transition-all cursor-pointer group shadow-sm hover:shadow-emerald-500/5"
+          className="bg-white border border-slate-200 hover:border-slate-300 rounded-xl p-4 transition-all cursor-pointer group shadow-xs hover:shadow-sm"
         >
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
             <span>Enrolled Students</span>
-            <span className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20 transition-colors">
+            <span className="p-1.5 rounded-lg bg-[#6dd95d]/25 text-emerald-950">
               <CheckCircle className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 flex items-baseline justify-between">
-            <span className="text-2xl font-bold text-slate-100">{studentsCount}</span>
-            <span className="text-xs text-emerald-400 flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-2xl font-bold text-slate-900">{studentsCount}</span>
+            <span className="text-xs text-emerald-800 font-semibold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
               Roster <ChevronRight className="w-3 h-3" />
             </span>
           </div>
@@ -131,17 +127,17 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
         {/* Invoices */}
         <div
           onClick={() => onNavigateTab('billing')}
-          className="bg-slate-900 border border-slate-800 hover:border-cyan-500/50 rounded-xl p-4 transition-all cursor-pointer group shadow-sm hover:shadow-cyan-500/5"
+          className="bg-white border border-slate-200 hover:border-slate-300 rounded-xl p-4 transition-all cursor-pointer group shadow-xs hover:shadow-sm"
         >
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
             <span>Invoices Generated</span>
-            <span className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500/20 transition-colors">
+            <span className="p-1.5 rounded-lg bg-[#c1a9e6]/25 text-purple-950">
               <CreditCard className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 flex items-baseline justify-between">
-            <span className="text-2xl font-bold text-slate-100">{invoicesCount}</span>
-            <span className="text-xs text-cyan-400 flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-2xl font-bold text-slate-900">{invoicesCount}</span>
+            <span className="text-xs text-purple-800 font-semibold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
               Billing <ChevronRight className="w-3 h-3" />
             </span>
           </div>
@@ -150,17 +146,17 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
         {/* Renewal Due Alerts */}
         <div
           onClick={() => onNavigateTab('billing')}
-          className="bg-slate-900 border border-slate-800 hover:border-amber-500/50 rounded-xl p-4 transition-all cursor-pointer group shadow-sm hover:shadow-amber-500/5"
+          className="bg-white border border-slate-200 hover:border-slate-300 rounded-xl p-4 transition-all cursor-pointer group shadow-xs hover:shadow-sm"
         >
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
             <span>Renewals Due</span>
-            <span className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 group-hover:bg-amber-500/20 transition-colors">
+            <span className="p-1.5 rounded-lg bg-[#fdb01b]/25 text-amber-950">
               <Clock className="w-4 h-4" />
             </span>
           </div>
           <div className="mt-2 flex items-baseline justify-between">
-            <span className="text-2xl font-bold text-amber-400">{renewals.length}</span>
-            <span className="text-xs text-amber-400 flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-2xl font-bold text-amber-700">{renewals.length}</span>
+            <span className="text-xs text-amber-800 font-semibold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
               Action <ChevronRight className="w-3 h-3" />
             </span>
           </div>
@@ -168,17 +164,17 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
 
         {/* Operational Exceptions */}
         <div
-          className={`bg-slate-900 border rounded-xl p-4 transition-all cursor-pointer group shadow-sm ${
+          className={`bg-white border rounded-xl p-4 transition-all cursor-pointer group shadow-xs hover:shadow-sm ${
             criticalExceptionsCount > 0
-              ? 'border-rose-500/40 hover:border-rose-500'
-              : 'border-slate-800 hover:border-slate-700'
+              ? 'border-[#f77f73]/50 hover:border-[#f77f73]'
+              : 'border-slate-200 hover:border-slate-300'
           }`}
         >
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
             <span>Exceptions Radar</span>
             <span
               className={`p-1.5 rounded-lg ${
-                criticalExceptionsCount > 0 ? 'bg-rose-500/10 text-rose-400' : 'bg-slate-800 text-slate-400'
+                criticalExceptionsCount > 0 ? 'bg-[#f77f73]/20 text-rose-900' : 'bg-slate-100 text-slate-600'
               }`}
             >
               <AlertTriangle className="w-4 h-4" />
@@ -187,12 +183,12 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
           <div className="mt-2 flex items-baseline justify-between">
             <span
               className={`text-2xl font-bold ${
-                criticalExceptionsCount > 0 ? 'text-rose-400' : 'text-slate-100'
+                criticalExceptionsCount > 0 ? 'text-rose-700' : 'text-slate-900'
               }`}
             >
               {exceptions.length}
             </span>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-500">
               {criticalExceptionsCount} critical
             </span>
           </div>
@@ -203,7 +199,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
       <section>
         <WaterfallChart
           waterfallData={waterfall}
-          onSelectStudent={(studentId) => {
+          onSelectStudent={() => {
             onNavigateTab('students');
           }}
         />
@@ -212,84 +208,108 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
       {/* 4. Action Radars: Exceptions & Renewal Due */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Exception Alerts Radar */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between shadow-xs">
           <div>
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
               <div className="flex items-center gap-2">
-                <ShieldAlert className="w-5 h-5 text-rose-400" />
-                <h3 className="text-base font-semibold text-slate-200">Exception Alerts Radar</h3>
+                <ShieldAlert className="w-5 h-5 text-rose-600" />
+                <h3 className="text-base font-bold text-slate-900">Exception Alerts Radar</h3>
               </div>
-              <span className="text-xs text-slate-400">View v_exceptions</span>
+              <span className="text-xs text-slate-500 font-mono">v_exceptions</span>
             </div>
 
             {exceptions.length === 0 ? (
-              <div className="text-center py-8 text-slate-400 text-sm flex flex-col items-center gap-2">
-                <CheckCircle className="w-8 h-8 text-emerald-400/80" />
+              <div className="text-center py-8 text-slate-500 text-sm flex flex-col items-center gap-2">
+                <CheckCircle className="w-8 h-8 text-emerald-600" />
                 <span>Zero exceptions detected across all academic and billing operations.</span>
               </div>
             ) : (
               <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
-                {exceptions.map((exc, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 flex items-start justify-between gap-3 text-xs transition-colors"
-                  >
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`px-2 py-0.5 rounded font-mono font-medium text-[10px] ${
-                            exc.severity === 'critical'
-                              ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                              : exc.severity === 'warning'
-                              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                              : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                          }`}
-                        >
-                          {exc.category}
-                        </span>
-                        {exc.entity_code && (
-                          <span className="text-slate-400 font-mono">{exc.entity_code}</span>
-                        )}
-                      </div>
-                      <p className="text-slate-300 font-normal">{exc.details}</p>
-                    </div>
+                {exceptions.map((exc: any, idx: number) => {
+                  const kind = exc.kind || exc.category || 'alert';
+                  const ref = exc.ref || exc.entity_code || '';
+                  const detail = exc.detail || exc.details || '';
+                  const isCritical = kind === 'no_checkin' || kind === 'negative_balance' || exc.severity === 'critical';
+                  const isWarning = kind === 'paid_no_slots' || kind === 'no_pay_rate' || exc.severity === 'warning';
 
-                    <button
-                      onClick={() => {
-                        if (exc.category.includes('session') || exc.category.includes('attendance')) {
-                          onNavigateTab('sessions');
-                        } else if (exc.category.includes('invoice') || exc.category.includes('billing')) {
-                          onNavigateTab('billing');
-                        } else {
-                          onNavigateTab('students');
-                        }
-                      }}
-                      className="text-slate-400 hover:text-slate-200 p-1 rounded hover:bg-slate-800 shrink-0"
-                      title="Inspect record"
+                  const formatKindLabel = (k: string) => {
+                    switch (k) {
+                      case 'no_checkin': return 'Check-in Overdue';
+                      case 'no_pay_rate': return 'Missing Pay Rate';
+                      case 'paid_no_slots': return 'Paid Without Slots';
+                      case 'negative_balance': return 'Negative Balance';
+                      default: return k.replace(/_/g, ' ');
+                    }
+                  };
+
+                  const handleNavigate = () => {
+                    const k = String(kind).toLowerCase();
+                    const r = String(ref).toLowerCase();
+                    if (k.includes('session') || k.includes('checkin') || r.startsWith('ses-')) {
+                      onNavigateTab('sessions');
+                    } else if (k.includes('invoice') || k.includes('paid') || k.includes('slot') || r.startsWith('inv-')) {
+                      onNavigateTab('billing');
+                    } else if (k.includes('rate') || k.includes('pay')) {
+                      onNavigateTab('master');
+                    } else {
+                      onNavigateTab('students');
+                    }
+                  };
+
+                  return (
+                    <div
+                      key={idx}
+                      className="p-3 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 flex items-start justify-between gap-3 text-xs transition-colors"
                     >
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`px-2 py-0.5 rounded font-mono font-bold text-[10px] ${
+                              isCritical
+                                ? 'bg-[#f77f73]/20 text-rose-950 border border-[#f77f73]/40'
+                                : isWarning
+                                ? 'bg-[#fdb01b]/20 text-amber-950 border border-[#fdb01b]/40'
+                                : 'bg-[#65acff]/20 text-blue-950 border border-[#65acff]/40'
+                            }`}
+                          >
+                            {formatKindLabel(kind)}
+                          </span>
+                          {ref && (
+                            <span className="text-slate-600 font-mono font-bold">{ref}</span>
+                          )}
+                        </div>
+                        <p className="text-slate-700 font-medium">{detail}</p>
+                      </div>
+
+                      <button
+                        onClick={handleNavigate}
+                        className="text-slate-400 hover:text-slate-800 p-1 rounded hover:bg-slate-200/60 shrink-0 cursor-pointer"
+                        title="Inspect record"
+                      >
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
         </div>
 
         {/* Renewal Due Radar */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between shadow-xs">
           <div>
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
               <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-amber-400" />
-                <h3 className="text-base font-semibold text-slate-200">Renewal Due Radar</h3>
+                <Clock className="w-5 h-5 text-amber-600" />
+                <h3 className="text-base font-bold text-slate-900">Renewal Due Radar</h3>
               </div>
-              <span className="text-xs text-slate-400">Balance &le; threshold</span>
+              <span className="text-xs text-slate-500 font-mono">v_renewal_due</span>
             </div>
 
             {renewals.length === 0 ? (
-              <div className="text-center py-8 text-slate-400 text-sm flex flex-col items-center gap-2">
-                <CheckCircle className="w-8 h-8 text-emerald-400/80" />
+              <div className="text-center py-8 text-slate-500 text-sm flex flex-col items-center gap-2">
+                <CheckCircle className="w-8 h-8 text-emerald-600" />
                 <span>All active students hold sufficient session balance (&gt; 1 credit).</span>
               </div>
             ) : (
@@ -297,16 +317,16 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
                 {renewals.map((r, idx) => (
                   <div
                     key={idx}
-                    className="p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 flex items-center justify-between gap-3 text-xs transition-colors"
+                    className="p-3 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 flex items-center justify-between gap-3 text-xs transition-colors"
                   >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-slate-200">{r.name}</span>
-                        <span className="text-slate-400 font-mono text-[11px]">{r.student_code}</span>
+                        <span className="font-bold text-slate-900">{r.name}</span>
+                        <span className="text-slate-500 font-mono text-[11px]">{r.student_code}</span>
                       </div>
-                      <div className="text-slate-400 text-[11px] mt-0.5">
+                      <div className="text-slate-600 text-[11px] mt-0.5">
                         Purchased: {r.purchased} | Consumed: {r.consumed} |{' '}
-                        <span className="text-amber-400 font-bold">Remaining: {r.balance}</span>
+                        <span className="text-amber-800 font-bold">Remaining: {r.balance}</span>
                       </div>
                     </div>
 
@@ -318,7 +338,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
                           onNavigateTab('billing');
                         }
                       }}
-                      className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-1 shrink-0 transition-colors shadow-sm"
+                      className="px-3 py-1.5 rounded-lg bg-[#6dd95d] hover:bg-[#5ec74e] text-slate-950 font-bold text-xs flex items-center gap-1 shrink-0 transition-colors"
                     >
                       <span>Invoice</span>
                       <ChevronRight className="w-3.5 h-3.5" />
@@ -333,18 +353,18 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
 
       {/* 5. Funnel Cohort Analytics */}
       {funnelCohort && funnelCohort.length > 0 && (
-        <section className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-4">
+        <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-indigo-400" />
-              <h3 className="text-base font-semibold text-slate-200">Funnel Conversion by Cohort Month</h3>
+              <TrendingUp className="w-5 h-5 text-blue-600" />
+              <h3 className="text-base font-bold text-slate-900">Funnel Conversion by Cohort Month</h3>
             </div>
-            <span className="text-xs text-slate-400">View v_funnel_cohort</span>
+            <span className="text-xs text-slate-500 font-mono">v_funnel_cohort</span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+            <table className="w-full text-left text-xs text-slate-700">
+              <thead className="bg-slate-50 text-slate-700 uppercase text-[10px] tracking-wider border-b border-slate-200 font-bold">
                 <tr>
                   <th className="py-2.5 px-3">Cohort Month</th>
                   <th className="py-2.5 px-3">Total Leads</th>
@@ -355,23 +375,23 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
                   <th className="py-2.5 px-3">Conv %</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-mono">
+              <tbody className="divide-y divide-slate-100 font-mono">
                 {funnelCohort.map((row: any, i: number) => {
                   const total = Number(row.total_leads) || 0;
                   const conv = Number(row.converted) || 0;
                   const pct = total > 0 ? ((conv / total) * 100).toFixed(1) : '0.0';
                   return (
-                    <tr key={i} className="hover:bg-slate-800/30">
-                      <td className="py-2.5 px-3 font-sans font-medium text-slate-200">
+                    <tr key={i} className="hover:bg-slate-50/70">
+                      <td className="py-2.5 px-3 font-sans font-medium text-slate-900">
                         {typeof row.cohort_month === 'string' ? row.cohort_month.slice(0, 7) : row.cohort_month}
                       </td>
                       <td className="py-2.5 px-3">{row.total_leads}</td>
                       <td className="py-2.5 px-3">{row.trial_attended || 0}</td>
                       <td className="py-2.5 px-3">{row.offer_made || 0}</td>
-                      <td className="py-2.5 px-3 text-emerald-400 font-semibold">{row.converted || 0}</td>
-                      <td className="py-2.5 px-3 text-rose-400">{row.lost || 0}</td>
+                      <td className="py-2.5 px-3 text-emerald-800 font-bold">{row.converted || 0}</td>
+                      <td className="py-2.5 px-3 text-rose-700">{row.lost || 0}</td>
                       <td className="py-2.5 px-3">
-                        <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-sans font-semibold">
+                        <span className="px-2 py-0.5 rounded bg-[#6dd95d]/20 text-emerald-950 font-sans font-bold">
                           {pct}%
                         </span>
                       </td>

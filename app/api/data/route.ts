@@ -97,6 +97,12 @@ export async function GET(request: Request) {
         requireRole(actor, 'master_admin', 'admin');
         return NextResponse.json(await tutoringService.getLeads());
 
+      case 'lead_flow': {
+        requireRole(actor, 'master_admin', 'admin', 'viewer');
+        const channel = searchParams.get('channel') || 'all';
+        return NextResponse.json(await tutoringService.getLeadFlow(channel));
+      }
+
       case 'lead_details':
         requireRole(actor, 'master_admin', 'admin');
         return NextResponse.json(await tutoringService.getLeadDetails(uuid(searchParams.get('id'), 'lead id')));
@@ -149,7 +155,9 @@ export async function GET(request: Request) {
 
       case 'waterfall_students': {
         requireRole(actor, 'master_admin', 'admin'); // returns student names and guardians
-        const month = optDate(searchParams.get('month'), 'month') || `${witaToday().slice(0, 7)}-01`;
+        const rawMonth = searchParams.get('month');
+        const normalizedMonth = rawMonth ? rawMonth.slice(0, 10) : undefined;
+        const month = optDate(normalizedMonth, 'month') || `${witaToday().slice(0, 7)}-01`;
         const bucket = oneOf(searchParams.get('bucket') || 'new_students', BUCKETS, 'bucket');
         return NextResponse.json(await tutoringService.getWaterfallStudents(month, bucket));
       }
@@ -160,7 +168,7 @@ export async function GET(request: Request) {
         const to = new Date(now + 60 * 864e5).toISOString();
 
         if (isAdminRole(actor)) {
-          const [master, leads, students, classes, invoices, sessions, reports] = await Promise.all([
+          const [master, leads, students, classes, invoices, sessions, reports, leadFlow] = await Promise.all([
             masterFor(actor),
             tutoringService.getLeads(),
             tutoringService.getStudents(),
@@ -168,8 +176,9 @@ export async function GET(request: Request) {
             tutoringService.getInvoices(),
             tutoringService.getSessions({ from, to, limit: 1500 }),
             tutoringService.getReports(),
+            tutoringService.getLeadFlow(),
           ]);
-          return NextResponse.json({ master, leads, students, classes, invoices, sessions, reports });
+          return NextResponse.json({ master, leads, students, classes, invoices, sessions, reports, leadFlow });
         }
 
         if (actor.role === 'teacher') {

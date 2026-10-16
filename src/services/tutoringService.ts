@@ -1,6 +1,7 @@
 import { pool } from '../db/index';
 import { UserError } from '@/lib/errors';
 import { toWita } from '@/lib/time';
+import { calculateLeadFlow } from '@/lib/leadFlow';
 
 export interface Lead {
   id: string;
@@ -89,6 +90,7 @@ export interface InvoiceItem {
   slots_generated_at: string | null;
   void_reason: string | null;
   created_at: string;
+  consumed_credits?: number;
 }
 
 export interface SessionItem {
@@ -256,6 +258,32 @@ export const tutoringService = {
     return res.rows[0].student_id;
   },
 
+  async getLeadFlow(channel?: string) {
+    let whereClause = '';
+    const params: any[] = [];
+    if (channel && channel !== 'all') {
+      params.push(channel);
+      whereClause = `WHERE l.source_channel = $1`;
+    }
+
+    const { rows: leads } = await pool.query(`
+      SELECT l.id, l.code, l.name, l.guardian_name, l.contact, l.source_channel, l.current_stage, l.lost_reason, l.student_id,
+        c.name as campaign_name, s.code as student_code,
+        EXISTS (SELECT 1 FROM lead_events e WHERE e.lead_id = l.id AND e.to_stage = 'contacted') as was_contacted,
+        EXISTS (SELECT 1 FROM lead_events e WHERE e.lead_id = l.id AND e.to_stage = 'trial_booked') as was_booked,
+        EXISTS (SELECT 1 FROM lead_events e WHERE e.lead_id = l.id AND e.to_stage = 'trial_attended') as was_attended,
+        EXISTS (SELECT 1 FROM lead_events e WHERE e.lead_id = l.id AND e.to_stage = 'offer_made') as was_offered,
+        EXISTS (SELECT 1 FROM lead_events e WHERE e.lead_id = l.id AND e.to_stage = 'converted') as was_converted
+      FROM leads l
+      LEFT JOIN campaigns c ON c.id = l.campaign_id
+      LEFT JOIN students s ON s.id = l.student_id
+      ${whereClause}
+      ORDER BY l.created_at DESC
+    `, params);
+
+    return calculateLeadFlow(leads);
+  },
+
   // Students
   async getStudents(): Promise<Student[]> {
     // One row per student. Totals are summed across enrollments; enrollment_id is the enrollment with the
@@ -274,7 +302,7 @@ export const tutoringService = {
       LEFT JOIN classes c ON c.id = e.class_id
       LEFT JOIN v_enrollment_balance b ON b.enrollment_id = e.id
       GROUP BY s.id
-      ORDER BY s.created_at DESC
+      ORDER BY s.name ASC, s.code ASC
     `);
     return res.rows;
   },
@@ -375,6 +403,7 @@ export const tutoringService = {
         FROM enrollments e
         JOIN students st ON st.id = e.student_id
         WHERE e.class_id = ANY($1) AND (e.end_date IS NULL OR e.end_date >= current_date)
+        ORDER BY st.name ASC
       `, [classIds]),
     ]);
 
@@ -476,13 +505,14 @@ export const tutoringService = {
       SELECT i.*,
         st.name as student_name, st.code as student_code,
         c.code as class_code,
-        p.name as package_name
+        p.name as package_name,
+        coalesce((SELECT count(*)::int FROM session_attendance a WHERE a.invoice_id = i.id AND a.consumes_credit), 0) as consumed_credits
       FROM invoices i
       JOIN students st ON st.id = i.student_id
       JOIN enrollments e ON e.id = i.enrollment_id
       JOIN classes c ON c.id = e.class_id
       JOIN packages p ON p.id = i.package_id
-      ORDER BY i.created_at DESC
+      ORDER BY st.name ASC, i.created_at DESC
     `);
     return res.rows;
   },
@@ -747,6 +777,7 @@ export const tutoringService = {
     return {
       waterfall: waterfall.rows,
       cohort: cohort.rows,
+      funnelCohort: cohort.rows,
       renewals: renewals.rows,
       exceptions: exceptions.rows,
       teacherMonth: teacherMonth.rows,

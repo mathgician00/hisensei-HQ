@@ -12,6 +12,7 @@ import { StudentsTab } from '@/components/StudentsTab';
 import { ClassesTab } from '@/components/ClassesTab';
 import { BillingTab } from '@/components/BillingTab';
 import { SessionsTab } from '@/components/SessionsTab';
+import { WeeklyTimetableMatrix } from '@/components/WeeklyTimetableMatrix';
 import { PayrollTab } from '@/components/PayrollTab';
 import { MasterDataTab } from '@/components/MasterDataTab';
 import { Loader2, AlertCircle, Shield, RefreshCw } from 'lucide-react';
@@ -98,13 +99,13 @@ export default function Home() {
 
   if (authState === 'loading' || (authState === 'ready' && isLoading && !data)) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-100 space-y-4">
-        <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center shadow-xl shadow-indigo-500/20 animate-pulse">
-          <Shield className="h-7 w-7 text-white" />
+      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center text-slate-900 space-y-4">
+        <div className="h-12 w-12 rounded-2xl bg-[#6dd95d] flex items-center justify-center">
+          <Shield className="h-7 w-7 text-slate-900" />
         </div>
-        <div className="flex items-center space-x-2 text-sm text-slate-400">
-          <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
-          <span>Loading…</span>
+        <div className="flex items-center space-x-2 text-sm text-slate-600">
+          <Loader2 className="h-4 w-4 animate-spin text-[#6dd95d]" />
+          <span>Loading system…</span>
         </div>
       </div>
     );
@@ -119,16 +120,16 @@ export default function Home() {
 
   if (errorMessage && !data) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-slate-100">
-        <div className="max-w-md w-full bg-slate-900 border border-rose-500/30 rounded-2xl p-6 shadow-2xl text-center space-y-4">
-          <div className="h-12 w-12 mx-auto rounded-full bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/20">
+      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center p-6 text-slate-900">
+        <div className="max-w-md w-full bg-white border border-[#f77f73]/40 rounded-2xl p-6 shadow-sm text-center space-y-4">
+          <div className="h-12 w-12 mx-auto rounded-full bg-[#f77f73]/10 text-[#f77f73] flex items-center justify-center border border-[#f77f73]/20">
             <AlertCircle className="h-6 w-6" />
           </div>
-          <h2 className="text-lg font-bold text-white">Could not load data</h2>
-          <p className="text-xs text-slate-400">{errorMessage}</p>
+          <h2 className="text-lg font-bold text-slate-900">Could not load data</h2>
+          <p className="text-xs text-slate-600">{errorMessage}</p>
           <button
             onClick={() => loadData()}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl shadow-md transition flex items-center justify-center space-x-2 mx-auto"
+            className="px-4 py-2 bg-[#6dd95d] hover:bg-[#5ec74e] text-slate-900 text-xs font-bold rounded-xl transition flex items-center justify-center space-x-2 mx-auto"
           >
             <RefreshCw className="h-4 w-4" />
             <span>Retry</span>
@@ -150,7 +151,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col md:flex-row">
       <Navbar
         currentRole={role}
         userEmail={me.email}
@@ -163,7 +164,8 @@ export default function Home() {
         exceptionsCount={exceptionsCount}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="flex-1 md:pl-16 min-w-0 transition-all">
+        <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {tab === 'dashboard' && (
           <DashboardTab
             reports={data.reports}
@@ -172,6 +174,16 @@ export default function Home() {
             invoicesCount={data.counts?.invoices ?? data.invoices?.length ?? 0}
             onNavigateTab={setActiveTab}
             onSelectStudentForInvoice={goInvoice}
+          />
+        )}
+
+        {tab === 'timetable' && (
+          <WeeklyTimetableMatrix
+            sessions={data.sessions || []}
+            currentRole={role}
+            selectedTeacherId={me.teacher_id || ''}
+            masterData={data.master}
+            onRefresh={() => loadData(true)}
           />
         )}
 
@@ -191,6 +203,7 @@ export default function Home() {
             onRefresh={() => loadData(true)}
             onNavigateTab={setActiveTab}
             readOnly={role === 'teacher'}
+            sessions={data.sessions || []}
           />
         )}
 
@@ -220,6 +233,7 @@ export default function Home() {
 
         {tab === 'master' && role === 'master_admin' && <MasterDataTab masterData={data.master} currentEmail={me.email} />}
       </main>
+      </div>
     </div>
   );
 }
